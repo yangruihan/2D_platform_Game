@@ -11,16 +11,25 @@ namespace Ruihanyang.Game
 		private KeyCode jumpKey = KeyCode.Space;
 
 		[SerializeField]
-		private float moveForce = 120f;
+		private float moveForce = 200f;
 
 		[SerializeField]
-		private float jumpForce = 200f;
+		private float maxJumpForce = 3000f;
+		[SerializeField]
+		private float minJumpForce = 1500f;
 
 		private PlayerMotor motor;
+
+		private float jumpKeyPressedTimer = 0f;
 
 		void Awake ()
 		{
 			motor = GetComponent<PlayerMotor> ();
+		}
+
+		void Start ()
+		{
+			jumpKeyPressedTimer = 0f;
 		}
 
 		void Update ()
@@ -39,8 +48,20 @@ namespace Ruihanyang.Game
 
 		void Jump ()
 		{
-			if (Input.GetKeyDown (jumpKey)) {
-				motor.Jump (new Vector3 (0f, jumpForce, 0f));
+			if (Input.GetKey (jumpKey)) {
+				jumpKeyPressedTimer += Time.deltaTime;
+			}
+
+			if (Input.GetKeyUp (jumpKey)) {
+				jumpKeyPressedTimer = jumpKeyPressedTimer >= 1.5f ? 1.5f : jumpKeyPressedTimer;
+
+				float _jumpForce = minJumpForce + (maxJumpForce - minJumpForce) * (jumpKeyPressedTimer / 1.5f);
+
+				print (_jumpForce);
+
+				motor.Jump (new Vector3 (0f, _jumpForce, 0f));
+
+				jumpKeyPressedTimer = 0f;
 			}
 		}
 	}
