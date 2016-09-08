@@ -1,7 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour
+namespace Ruihanyang.Game
 {
 
+	public class Player : MonoBehaviour
+	{
+		public string playerName;
+
+
+	}
 }
